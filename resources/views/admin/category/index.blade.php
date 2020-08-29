@@ -114,14 +114,24 @@
                         return 'No Image'; 
                       }
                        
-                      return "<a data-magnify=\"gallery\" href=\"images/category/"+ data + "\"> <img class=\"img-responsive\" height=\"50\"/ src=\"images/category/"+ data + "\"></a>";
+                      return "<a data-magnify=\"gallery\" href=\"{{ Storage::disk('s3')->url('') }}"+ data + "\"> <img class=\"img-responsive\" height=\"50\"/ src=\"{{ Storage::disk('s3')->url('') }}"+ data + "\"></a>";
                   },
                   "title": "Image",
                   "orderable": true,
                   "searchable": true
               }, 
 	       			{ data: 'action', name: 'action', oderable: false }
-		       	]
+		       	],
+        "drawCallback": function( settings ) {
+          $('[data-toggle="tooltip"]').tooltip();
+          $('[data-magnify]').magnify({
+            resizable: false,
+            headToolbar: [
+              'close'
+            ],
+            initMaximized: true
+          });
+        }
 		    });
 		});
 	</script>

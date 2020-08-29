@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DataTables;
 use App\Category;
+use Storage; 
 
 class CategoryController extends Controller
 {
@@ -52,14 +53,16 @@ class CategoryController extends Controller
         ]);
 
 
-        $image = $request->file('image');
+        /*$image = $request->file('image');
         $input['imagename'] = time().'.'.$image->getClientOriginalExtension();
         $destinationPath = public_path('/images/category');
-        $image->move($destinationPath, $input['imagename']);
+        $image->move($destinationPath, $input['imagename']);*/
+        $file = $request->file('image');
+        $filePath = $file->store('category', 's3');
 
         $category = new Category;
         $category->name = $request->input('name');
-        $category->image = $input['imagename'];
+        $category->image = $filePath;
         $category->save(); 
 
         return redirect()->route('category.index')
@@ -105,7 +108,15 @@ class CategoryController extends Controller
         $res = Category::where('category_id',$id)->first();  
         $imagename = $res->image;
         if(!empty($request->file('image'))){
-            $file = $res->image;
+
+
+            if(Storage::disk('s3')->exists($imagename)) {
+                Storage::disk('s3')->delete($imagename);
+            }
+            $file = $request->file('image');
+            $imagename = $file->store('category', 's3');
+
+            /*$file = $res->image;
             if(!empty($file)){
                 $filename = public_path().'/images/category/'.$file;
                 \File::delete($filename);
@@ -113,7 +124,7 @@ class CategoryController extends Controller
             $image = $request->file('image');
             $imagename = time().'.'.$image->getClientOriginalExtension();
             $destinationPath = public_path('/images/category');
-            $image->move($destinationPath, $imagename);
+            $image->move($destinationPath, $imagename);*/
         }
         
         $affectedRows = Category::where('category_id', $id)

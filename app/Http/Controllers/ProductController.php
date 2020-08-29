@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use DataTables;
 use App\Product;
 use App\Category;
+use Storage;
 
 class ProductController extends Controller
 {
@@ -57,10 +58,12 @@ class ProductController extends Controller
             'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        $image = $request->file('image');
+        /*$image = $request->file('image');
         $imagename = time().'.'.$image->getClientOriginalExtension();
         $destinationPath = public_path('/images/product');
-        $image->move($destinationPath, $imagename);
+        $image->move($destinationPath, $imagename);*/
+        $file = $request->file('image');
+        $filePath = $file->store('product', 's3');
 
         $product = new Product;
         $product->category_id = $request->input('category_id');
@@ -119,7 +122,14 @@ class ProductController extends Controller
         $res = Product::where('product_id',$id)->first();  
         $imagename = $res->image;
         if(!empty($request->file('image'))){
-            $file = $res->image;
+
+            if(Storage::disk('s3')->exists($imagename)) {
+                Storage::disk('s3')->delete($imagename);
+            }
+            $file = $request->file('image');
+            $imagename = $file->store('product', 's3');
+
+            /*$file = $res->image;
             if(!empty($file)){
                 $filename = public_path().'/images/category/'.$file;
                 \File::delete($filename);
@@ -127,7 +137,7 @@ class ProductController extends Controller
             $image = $request->file('image');
             $imagename = time().'.'.$image->getClientOriginalExtension();
             $destinationPath = public_path('/images/category');
-            $image->move($destinationPath, $imagename);
+            $image->move($destinationPath, $imagename);*/
         }
         
         $affectedRows = Product::where('product_id', $id)

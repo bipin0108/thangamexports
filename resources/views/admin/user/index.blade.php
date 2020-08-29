@@ -30,7 +30,7 @@
             <div class="card-header">
               <h3 class="card-title">Products</h3>
               <div class="text-right">
-                <a class="btn btn-primary" href="{{ route('sample.create') }}"> <i class="fa fa-plus"></i> Create</a>
+                <a class="btn btn-primary" href="{{ route('user.create') }}"> <i class="fa fa-plus"></i> Create</a>
               </div>
             </div>
             <!-- /.card-header -->
@@ -92,42 +92,52 @@
 	<script>
 		$(document).ready(function(){
 
-      $(document).on('click', '.delete', function(){
-        var id = $(this).data('id');
-        var url = '{{ route("product.destroy", ":id") }}';
-        url = url.replace(':id', id);
-        $("#frmDel").attr('action',url);
-        $("#modalDel").modal('show');
-      });
+			$(document).on('click', '.delete', function(){
+				var id = $(this).data('id');
+				var url = '{{ route("product.destroy", ":id") }}';
+				url = url.replace(':id', id);
+				$("#frmDel").attr('action',url);
+				$("#modalDel").modal('show');
+			});
 
 		 	$("#table").DataTable({
 	       		processing: true,
 	       		serverSide: true,
 	       		ajax: {
-	       			url: "{{ route('sample.index') }}"
+	       			url: "{{ route('user.index') }}"
 		       	},
 		       	columns: [
-              { data: 'DT_RowIndex', name: 'DT_RowIndex' },
-              {
-                  "name": "profile_image",
-                  "data": "profile_image",
-                  "render": function (data, type, full, meta) {
-                      if(data == ''){
-                        return 'No Image'; 
-                      }
+					{ data: 'DT_RowIndex', name: 'DT_RowIndex' },
+						{
+							"name": "profile_image",
+							"data": "profile_image",
+							"render": function (data, type, full, meta) {
+							if(data == ''){
+								return 'No Image'; 
+							}
                        
-                      return "<a data-magnify=\"gallery\" href=\"images/user/"+ data + "\"> <img class=\"img-responsive\" height=\"50\"/ src=\"images/user/"+ data + "\"></a>";
-                  },
-                  "title": "Profile Image",
-                  "orderable": true,
-                  "searchable": true
-              }, 
-              { data: 'first_name', name: 'first_name' },  
-              { data: 'last_name', name: 'weight' }, 
-              { data: 'email', name: 'stone' }, 
-              { data: 'mobile', name: 'mobile' }, 
+							return "<a data-magnify=\"gallery\" href=\"{{ Storage::disk('s3')->url('') }}"+ data + "\"> <img class=\"img-responsive\" height=\"50\"/ src=\"{{ Storage::disk('s3')->url('') }}"+ data + "\"></a>";
+						},
+						"title": "Profile Image",
+						"orderable": true,
+						"searchable": true
+					}, 
+					{ data: 'first_name', name: 'first_name' },  
+					{ data: 'last_name', name: 'weight' }, 
+					{ data: 'email', name: 'stone' }, 
+					{ data: 'mobile', name: 'mobile' }, 
 	       			{ data: 'action', name: 'action', oderable: false }
-		       	]
+		       	],
+				"drawCallback": function( settings ) {
+					$('[data-toggle="tooltip"]').tooltip();
+					$('[data-magnify]').magnify({
+						resizable: false,
+						headToolbar: [
+							'close'
+						],
+						initMaximized: true
+					});
+				}
 		    });
 		});
 	</script>

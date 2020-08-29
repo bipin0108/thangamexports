@@ -12,9 +12,9 @@ class UserTableSeeder extends Seeder
     public function run()
     {
         $admin = new User(); 
-        $admin->first_name = 'Sungum';
+        $admin->first_name = 'Thangam';
 		$admin->last_name = 'Export';
-		$admin->email = 'admin@sungumexport.com';
+		$admin->email = 'admin@thangamexports.com';
         $admin->password = bcrypt('123456');
 		$admin->is_admin = '1';
 		$admin->save();     

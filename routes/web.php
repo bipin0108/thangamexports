@@ -24,7 +24,7 @@ Route::get('/profile', 'HomeController@profile')->middleware('auth');
 Route::post('/profile-change', 'HomeController@profile_change')->middleware('auth');
 Route::post('/change-password', 'HomeController@change_password')->middleware('auth');
 
-Route::resource('/sample', 'SampleController')->middleware('auth');
+Route::resource('/user', 'UserController')->middleware('auth');
 Route::resource('/category', 'CategoryController')->middleware('auth');
 Route::resource('/product', 'ProductController')->middleware('auth');
 Route::resource('/export', 'ExportController');

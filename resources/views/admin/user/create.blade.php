@@ -14,7 +14,7 @@
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{ url('/dashboard') }}">Home</a></li>
-              <li class="breadcrumb-item"><a href="{{ route('sample.index') }}">Users</a></li>
+              <li class="breadcrumb-item"><a href="{{ route('user.index') }}">Users</a></li>
               <li class="breadcrumb-item active">User Create</li>
             </ol>
           </div>
@@ -31,12 +31,12 @@
             <div class="card-header">
               <h3 class="card-title">User Create</h3>
               <div class="text-right">
-                <a class="btn btn-primary" href="{{ route('sample.index') }}"><i class="fa fa-backward"></i> Back</a>
+                <a class="btn btn-primary" href="{{ route('user.index') }}"><i class="fa fa-backward"></i> Back</a>
               </div>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-               {!! Form::open(array('route' => 'sample.store','method'=>'POST','enctype' => 'multipart/form-data')) !!}
+               {!! Form::open(array('route' => 'user.store','method'=>'POST','enctype' => 'multipart/form-data')) !!}
                 <div class="row">
                   <div class="col-6">
                     <div class="col-xs-12 col-sm-12 col-md-12">
@@ -76,7 +76,6 @@
                           </span>
                         @enderror
                       </div>
-                      
                       <div class="form-group">
                         <strong>Mobile:</strong>
                         <input id="mobile" type="text" class="form-control @error('mobile') is-invalid @enderror" name="mobile" autocomplete="mobile" placeholder="Mobile"> 
@@ -86,7 +85,6 @@
                           </span>
                         @enderror
                       </div>
-                        
                       <div class="form-group">
                         <strong>Image:</strong>
                         <input id="image" type="file" class="form-control @error('image') is-invalid @enderror" name="image" >

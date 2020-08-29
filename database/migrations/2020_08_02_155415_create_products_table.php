@@ -20,7 +20,7 @@ class CreateProductsTable extends Migration
             $table->float('weight')->default('0');
             $table->integer('stone')->default('0');
             $table->string('kt')->default('');
-            $table->text('image')->default('');
+            $table->string('image')->default('');
             $table->timestamps(); 
         });
     }

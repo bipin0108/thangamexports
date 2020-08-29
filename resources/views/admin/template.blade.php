@@ -6,17 +6,17 @@
   <title>RockOutLoud</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('public/plugins/fontawesome-free/css/all.min.css') }}">
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-  <link rel="stylesheet" href="{{ asset('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/jquery.magnify.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/zoom.css') }}"> 
-  <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-  <link rel="icon" href="{{ asset('image/logo.png') }}" type="image/gif" sizes="16x16">
+  <link rel="stylesheet" href="{{ asset('public/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('public/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('public/dist/css/adminlte.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('public/css/jquery.magnify.css') }}">
+  <link rel="stylesheet" href="{{ asset('public/css/zoom.css') }}"> 
+  <link rel="stylesheet" href="{{ asset('public/css/style.css') }}">
+  <link rel="icon" href="{{ asset('public/image/logo.png') }}" type="image/gif" sizes="16x16">
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
-  <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
+  <script src="{{ asset('public/plugins/jquery/jquery.min.js') }}"></script>
 </head>
 <body class="sidebar-mini control-sidebar-slide-open text-sm">
   <!-- Site wrapper -->
@@ -36,8 +36,8 @@
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
       <!-- Brand Logo -->
       <a href="{{ url('/') }}" class="brand-link">
-          <img src="{{ asset('image/logo.png') }}" alt="RockOutLoud Logo" class="brand-image elevation-3">
-          <span class="brand-text font-weight-light">RockOutLoud</span>
+          <img src="{{ asset('public/image/logo.png') }}" alt="{{ env('APP_NAME', '') }} Logo" class="brand-image elevation-3">
+          <span class="brand-text font-weight-light">{{ env('APP_NAME', '') }}</span>
       </a>
 
       <!-- Sidebar -->
@@ -45,7 +45,7 @@
         <!-- Sidebar user (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
           <div class="image">
-            <img src="{{ asset('image/profile.png') }}" class="img-circle elevation-2" alt="User Image">
+            <img src="{{ asset('public/image/profile.png') }}" class="img-circle elevation-2" alt="User Image">
           </div>
           <div class="info">
             <a href="{{ url('/profile') }}" class="d-block">Hello, Admin</a>
@@ -56,27 +56,27 @@
         <nav class="mt-2">
           <ul class="nav nav-pills nav-sidebar flex-column text-sm nav-flat nav-legacy nav-compact nav-child-indent" data-widget="treeview" role="menu" data-accordion="false">
               <li class="nav-item">
-                <a href="{{ url('/dashboard') }}" class="nav-link {{ (request()->is('dashboard')) ? 'active' : '' }}">
+                <a href="{{ url('/dashboard') }}" class="nav-link {{ (request()->is('dashboard') || request()->is('/')) ? 'active' : '' }}">
                   <i class="nav-icon fas fa-tachometer-alt"></i>
                   <p>Dashboard</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{ route('category.index') }}" class="nav-link {{ (request()->is('category')) ? 'active' : '' }}">
+                <a href="{{ route('category.index') }}" class="nav-link {{ (request()->is('category*')) ? 'active' : '' }}">
                   <i class="nav-icon fas fa-paper-plane"></i>
                   <p>Categories</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{ route('product.index') }}" class="nav-link {{ (request()->is('product')) ? 'active' : '' }}">
+                <a href="{{ route('product.index') }}" class="nav-link {{ (request()->is('product*')) ? 'active' : '' }}">
                   <i class="nav-icon fas fa-shopping-cart"></i>
                   <p>Products</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{ url('/sample') }}" class="nav-link {{ (request()->is('sample')) ? 'active' : '' }}">
+                <a href="{{ url('/user') }}" class="nav-link {{ (request()->is('user*')) ? 'active' : '' }}">
                   <i class="nav-icon fas fa-user-alt"></i>
-                  <p>Sample Data</p>
+                  <p>Users</p>
                 </a>
               </li>
               <li class="nav-item">
@@ -98,21 +98,21 @@
       <div class="float-right d-none d-sm-block">
         
       </div>
-      <strong>Copyright &copy; 2020 <a href="{{ url('/') }}">RockOutLoud</a>.</strong> All rights
+      <strong>Copyright &copy; 2020 <a href="{{ url('/') }}">{{ env('APP_NAME', '') }}</a>.</strong> All rights
       reserved.
     </footer>
   </div>
   <!-- ./wrapper -->
   
   <!-- jQuery -->
-  <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-  <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
-  <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
-  <script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
-  <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
-  <script src="{{ asset('dist/js/adminlte.min.js') }}"></script>
-  <script src="{{ asset('dist/js/demo.js') }}"></script>
-  <script src="{{ asset('dist/js/jquery.magnify.js') }}"></script>
+  <script src="{{ asset('public/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+  <script src="{{ asset('public/plugins/datatables/jquery.dataTables.min.js') }}"></script>
+  <script src="{{ asset('public/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+  <script src="{{ asset('public/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+  <script src="{{ asset('public/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+  <script src="{{ asset('public/dist/js/adminlte.min.js') }}"></script>
+  <script src="{{ asset('public/dist/js/demo.js') }}"></script>
+  <script src="{{ asset('public/dist/js/jquery.magnify.js') }}"></script>
   
   <script>
     $('a[data-toggle="pill"]').on('show.bs.tab', function(e) {

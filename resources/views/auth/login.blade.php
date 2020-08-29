@@ -3,7 +3,7 @@
 @section('content')
 <div class="login-box">
   <div class="login-logo">
-    <a href="javascript:;"><img src="{{ asset('image/logo.png') }}" alt="RockOutLoud Logo" class="brand-image"> <b>RockOutLoud</b></a>
+    <a href="javascript:;"><img src="{{ asset('public/image/logo.png') }}" alt="RockOutLoud Logo" class="brand-image"> <b>{{ env('APP_NAME', '') }}</b></a>
   </div>
   <!-- /.login-logo -->
   <div class="card">

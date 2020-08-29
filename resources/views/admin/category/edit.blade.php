@@ -50,7 +50,7 @@
                       @enderror
                     </div>
                     <div class="form-group">
-                      <a data-magnify="gallery" href="{{ asset('images/category/'.$category->image) }}"> <img class="img-responsive" height="100" src="{{ asset('images/category/'.$category->image) }}"></a>
+                      <a data-magnify="gallery" href="{{ Storage::disk('s3')->url($category->image) }}"> <img class="img-responsive" height="100" src="{{ Storage::disk('s3')->url($category->image) }}"></a>
                     </div>
                     <div class="form-group">
                       <strong>Image:</strong>

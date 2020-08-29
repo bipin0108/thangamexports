@@ -116,7 +116,7 @@
                         return 'No Image'; 
                       }
                        
-                      return "<a data-magnify=\"gallery\" href=\"images/product/"+ data + "\"> <img class=\"img-responsive\" height=\"50\"/ src=\"images/product/"+ data + "\"></a>";
+                      return "<a data-magnify=\"gallery\" href=\"{{ Storage::disk('s3')->url('') }}"+ data + "\"> <img class=\"img-responsive\" height=\"50\"/ src=\"{{ Storage::disk('s3')->url('') }}"+ data + "\"></a>";
                   },
                   "title": "Image",
                   "orderable": true,
