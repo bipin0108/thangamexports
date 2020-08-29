@@ -8,6 +8,7 @@ use DataTables;
 use App\Events\UserRegisteredEvent;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\WelcomeMail;
+use Storage;
 
 class UserController extends Controller
 {
@@ -62,9 +63,12 @@ class UserController extends Controller
         $imagename = time().'.'.$image->getClientOriginalExtension();
         $destinationPath = public_path('/images/user');
         $image->move($destinationPath, $imagename);*/
+        $imagename = '';
+        if(!empty($request->file('image'))){
 
-        $file = $request->file('image');
-        $filePath = $file->store('user', 's3');
+            $file = $request->file('image');
+            $imagename = $file->store('user', 's3');
+        }
 
         $user = new User;
         $user->first_name = $request->input('first_name');
@@ -77,7 +81,7 @@ class UserController extends Controller
 
         event(new UserRegisteredEvent($user));
 
-        return redirect()->route('sample.index')
+        return redirect()->route('user.index')
                         ->with('success','User created successfully.');
     }
 
@@ -114,15 +118,15 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'category_id' => 'required|numeric|not_in:0',
-            'product_code' => "required|unique:products,product_code,$id,product_id", 
-            'weight' => 'required|string|numeric|not_in:0',
-            'stone' => 'required|string|numeric|not_in:0',
-            'kt' => 'required',
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
+            'email' => 'required|unique:users,$id,email',  
+            'mobile' => 'required|numeric',
+            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        $res = User::where('product_id',$id)->first();  
-        $imagename = $res->image;
+        $user = User::where('id',$id)->first();  
+        $imagename = $user->image;
         if(!empty($request->file('image'))){
 
             if(Storage::disk('s3')->exists($imagename)) {
@@ -144,16 +148,15 @@ class UserController extends Controller
         
         $affectedRows = Product::where('product_id', $id)
                     ->update(array(
-                        'category_id' => $request->input('category_id'),
-                        'product_code' => $request->input('product_code'), 
-                        'weight' => $request->input('weight'),
-                        'stone' => $request->input('stone'),
-                        'kt' => implode(',', $request->input('kt')),
-                        'image' => $imagename,
+                        'first_name' => $request->input('first_name'),
+                        'last_name' => $request->input('last_name'), 
+                        'email' => $request->input('email'),
+                        'mobile' => $request->input('mobile'), 
+                        'profile_image' => $imagename, 
                     ));
 
-        return redirect()->route('product.index')
-                            ->with('success','Product updated successfully.');
+        return redirect()->route('user.index')
+                            ->with('success','User updated successfully.');
     }
 
     /**
@@ -164,6 +167,17 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::where('id', $id)->first();
+        $imagename = $user->profile_image;
+        if(!empty($imagename)){
+            if(Storage::disk('s3')->exists($imagename)) {
+                Storage::disk('s3')->delete($imagename);
+            }  
+            /*$filename = public_path().'/images/user/'.$file;
+            \File::delete($filename);*/
+        }
+        User::where('id',$id)->delete();
+        return redirect()->route('user.index')
+                ->with('success','User deleted successfully.');
     }
 }

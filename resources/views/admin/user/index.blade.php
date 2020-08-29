@@ -93,8 +93,8 @@
 		$(document).ready(function(){
 
 			$(document).on('click', '.delete', function(){
-				var id = $(this).data('id');
-				var url = '{{ route("product.destroy", ":id") }}';
+				var id = $(this).attr('id');
+				var url = '{{ route("user.destroy", ":id") }}';
 				url = url.replace(':id', id);
 				$("#frmDel").attr('action',url);
 				$("#modalDel").modal('show');
@@ -107,7 +107,7 @@
 	       			url: "{{ route('user.index') }}"
 		       	},
 		       	columns: [
-					{ data: 'DT_RowIndex', name: 'DT_RowIndex' },
+					   { data: 'DT_RowIndex', name: 'DT_RowIndex' },
 						{
 							"name": "profile_image",
 							"data": "profile_image",

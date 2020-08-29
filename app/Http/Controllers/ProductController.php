@@ -62,8 +62,11 @@ class ProductController extends Controller
         $imagename = time().'.'.$image->getClientOriginalExtension();
         $destinationPath = public_path('/images/product');
         $image->move($destinationPath, $imagename);*/
-        $file = $request->file('image');
-        $filePath = $file->store('product', 's3');
+        $imagename = '';
+        if(!empty($request->file('image'))){
+            $file = $request->file('image');
+            $imagename = $file->store('product', 's3');
+        }
 
         $product = new Product;
         $product->category_id = $request->input('category_id');
@@ -163,10 +166,13 @@ class ProductController extends Controller
     public function destroy($id)
     {
         $product = Product::where('product_id', $id)->first();
-        $file = $product->image;
-        if(!empty($file)){
-            $filename = public_path().'/images/product/'.$file;
-            \File::delete($filename);
+        $imagename = $product->image;
+        if(!empty($imagename)){
+            if(Storage::disk('s3')->exists($imagename)) {
+                Storage::disk('s3')->delete($imagename);
+            }  
+            /*$filename = public_path().'/images/product/'.$file;
+            \File::delete($filename);*/
         }
         Product::where('product_id',$id)->delete();
         return redirect()->route('product.index')

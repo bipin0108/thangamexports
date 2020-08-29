@@ -57,12 +57,15 @@ class CategoryController extends Controller
         $input['imagename'] = time().'.'.$image->getClientOriginalExtension();
         $destinationPath = public_path('/images/category');
         $image->move($destinationPath, $input['imagename']);*/
-        $file = $request->file('image');
-        $filePath = $file->store('category', 's3');
+        $imagename = '';
+        if(!empty($request->file('image'))){
+            $file = $request->file('image');
+            $imagename = $file->store('category', 's3');
+        }
 
         $category = new Category;
         $category->name = $request->input('name');
-        $category->image = $filePath;
+        $category->image = $imagename;
         $category->save(); 
 
         return redirect()->route('category.index')
@@ -147,10 +150,13 @@ class CategoryController extends Controller
     {
         
         $category = Category::where('category_id', $id)->first();
-        $file = $category->image;
-        if(!empty($file)){
-            $filename = public_path().'/images/category/'.$file;
-            \File::delete($filename);
+        $imagename = $category->image;
+        if(!empty($imagename)){
+            if(Storage::disk('s3')->exists($imagename)) {
+                Storage::disk('s3')->delete($imagename);
+            }
+            /*$filename = public_path().'/images/category/'.$file;
+            \File::delete($filename);*/
         }
         Category::where('category_id',$id)->delete();
         return redirect()->route('category.index')
