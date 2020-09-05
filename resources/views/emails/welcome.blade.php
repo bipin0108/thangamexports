@@ -5,7 +5,7 @@
 {{ $user->first_name }} {{ $user->last_name }}, thank you.
 
 
-Your Email :  {{ $user->email }}
+Your Email :  {{ $user->email }}<br>
 Password : {{ $user->password }}
  
 

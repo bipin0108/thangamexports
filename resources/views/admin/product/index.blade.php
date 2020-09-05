@@ -44,6 +44,7 @@
                   <th>Weight</th>
                   <th>Stone/Diamond</th>
                   <th>KT</th>
+                  <th>Is Popular</th>
                   <th>Action</th> 
                 </tr>
                 </thead>
@@ -100,7 +101,7 @@
         $("#modalDel").modal('show');
       });
 
-		 	$("#table").DataTable({
+		 	var table = $("#table").DataTable({
 	       		processing: true,
 	       		serverSide: true,
 	       		ajax: {
@@ -126,9 +127,19 @@
               { data: 'weight', name: 'weight' }, 
               { data: 'stone', name: 'stone' }, 
               { data: 'kt', name: 'kt' }, 
+              { data: 'is_popular', name: 'is_popular' }, 
 	       			{ data: 'action', name: 'action', oderable: false }
 		       	]
 		    });
+
+      $(document).on('click', '.is_popular', function(){
+        var product_id = $(this).data('product_id');
+        var is_popular = $(this).data('is_popular');
+        $.post('product-is-popular',{"_token": "{{ csrf_token() }}",product_id:product_id,is_popular:is_popular},function(res){
+          table.draw();
+        });
+      });
+
 		});
 	</script>
 @endsection

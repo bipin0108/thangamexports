@@ -62,7 +62,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{ route('category.index') }}" class="nav-link {{ (request()->is('category*')) ? 'active' : '' }}">
+                <a href="{{ route('category.index') }}" class="nav-link {{ (request()->is('category*')) || (request()->is('sub-category*')) ? 'active' : '' }}">
                   <i class="nav-icon fas fa-paper-plane"></i>
                   <p>Categories</p>
                 </a>
@@ -77,6 +77,12 @@
                 <a href="{{ url('/user') }}" class="nav-link {{ (request()->is('user*')) ? 'active' : '' }}">
                   <i class="nav-icon fas fa-user-alt"></i>
                   <p>Users</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url('/slider') }}" class="nav-link {{ (request()->is('slider*')) ? 'active' : '' }}">
+                  <i class="nav-icon fas fa-image"></i>
+                  <p>Slider</p>
                 </a>
               </li>
               <li class="nav-item">

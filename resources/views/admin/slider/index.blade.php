@@ -9,12 +9,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Categories</h1>
+            <h1>Slider</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{ url('/dashboard') }}">Home</a></li>
-              <li class="breadcrumb-item active">Categories</li>
+              <li class="breadcrumb-item active">Slider</li>
             </ol>
           </div>
         </div>
@@ -28,9 +28,9 @@
         <div class="col-12">
           <div class="card">
             <div class="card-header">
-              <h3 class="card-title">Categories</h3>
+              <h3 class="card-title">Slider</h3>
               <div class="text-right">
-                <a class="btn btn-primary" href="{{ route('category.create') }}"> <i class="fa fa-plus"></i> Create</a>
+                <a class="btn btn-primary" href="{{ route('slider.create') }}"> <i class="fa fa-plus"></i> Create</a>
               </div>
             </div>
             <!-- /.card-header -->
@@ -39,8 +39,7 @@
                 <thead>
                 <tr>
                   <th>Sr. No</th>
-                  <th>Name</th>
-                  <th>Image</th> 
+                  <th>Image</th>
                   <th>Action</th> 
                 </tr>
                 </thead>
@@ -89,52 +88,49 @@
 	<script>
 		$(document).ready(function(){
 
-      $(document).on('click', '.delete', function(){
-        var id = $(this).data('id');
-        var url = '{{ route("category.destroy", ":id") }}';
-        url = url.replace(':id', id);
-        $("#frmDel").attr('action',url);
-        $("#modalDel").modal('show');
-      });
+			$(document).on('click', '.delete', function(){
+				var id = $(this).attr('id');
+				var url = '{{ route("slider.destroy", ":id") }}';
+				url = url.replace(':id', id);
+				$("#frmDel").attr('action',url);
+				$("#modalDel").modal('show');
+			});
 
 		 	$("#table").DataTable({
      		processing: true,
      		serverSide: true,
      		ajax: {
-     			url: "{{ route('category.index') }}"
+     			url: "{{ route('slider.index') }}"
        	},
-       	columns: [
+     	  columns: [
           { data: 'DT_RowIndex', name: 'DT_RowIndex' },
-          { data: 'name', name: 'name' }, 
-     			{
-              "name": "image",
-              "data": "image",
-              "render": function (data, type, full, meta) {
-                  if(data == ''){
-                    return 'No Image'; 
-                  }
-                   
-                  return "<a data-magnify=\"gallery\" href=\"{{ Storage::disk('s3')->url('') }}"+ data + "\"> <img class=\"img-responsive\" height=\"50\"/ src=\"{{ Storage::disk('s3')->url('') }}"+ data + "\"></a>";
-              },
-              "title": "Image",
-              "orderable": true,
-              "searchable": true
-          },   
-     			{ data: 'action', name: 'action', oderable: false }
+	        {
+            "name": "image",
+            "data": "image",
+            "render": function (data, type, full, meta) {
+              if(data == ''){
+                return 'No Image'; 
+              }
+                     
+  					  return "<a data-magnify=\"gallery\" href=\"{{ Storage::disk('s3')->url('') }}"+ data + "\"> <img class=\"img-responsive\" height=\"50\"/ src=\"{{ Storage::disk('s3')->url('') }}"+ data + "\"></a>";
+  				  },
+  				  "title": "Profile Image",
+  				  "orderable": true,
+  				  "searchable": true
+  			  }, 
+  			  { data: 'action', name: 'action', oderable: false }
        	],
-        "drawCallback": function( settings ) {
-          $('[data-toggle="tooltip"]').tooltip();
-          $('[data-magnify]').magnify({
-            resizable: false,
-            headToolbar: [
-              'close'
-            ],
-            initMaximized: true
-          });
-        }
-		  });
-
-      
+  		  "drawCallback": function( settings ) {
+  			  $('[data-toggle="tooltip"]').tooltip();
+  			  $('[data-magnify]').magnify({
+  				  resizable: false,
+  				  headToolbar: [
+  					 'close'
+  				  ],
+  				  initMaximized: true
+  			 });
+  		  }
+      });
 		});
 	</script>
 @endsection

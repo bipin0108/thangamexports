@@ -70,6 +70,15 @@ class UserController extends Controller
             $imagename = $file->store('user', 's3');
         }
 
+        // $to_name = "Bipin Nakrani";
+        // $to_email = "mkrupali2806@gmail.com";
+
+        // $data = array('name'=>$to_name,'body'=>'Test Mail');
+
+        // Mail::send('emails.welcome', $data, function($message) use ($to_name, $to_email){
+        //     $message->to($to_email)->subject('Lara mail subject.');
+        // });
+
         $user = new User;
         $user->first_name = $request->input('first_name');
         $user->last_name = $request->input('last_name'); 
@@ -79,7 +88,40 @@ class UserController extends Controller
         $user->profile_image = $imagename;
         $user->save(); 
 
-        event(new UserRegisteredEvent($user));
+        // $user->password = $request->input('password');
+        // event(new UserRegisteredEvent($user));
+
+
+        $from = "nakrani0108@gmail.com";
+        $to = $request->input('email');
+        $subject = env('APP_NAME', 'Thangam Exports').' forgot password';
+
+        // To send HTML mail, the Content-type header must be set
+        $headers  = 'MIME-Version: 1.0' . "\r\n";
+        $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+         
+        // Create email headers
+        $headers .= 'From: '.env('APP_NAME', 'Thangam Exports').' <'.$from.'>'."\r\n".
+            'Reply-To: '.env('APP_NAME', 'Thangam Exports').' <'.$from.'>'."\r\n" .
+            'X-Mailer: PHP/' . phpversion();
+        
+        $message  = "-------------------------------------------<br/>";
+        $message .= " thangamexports.com : Forgot Password <br/>";
+        $message .= "-------------------------------------------<br/><br/>";
+        
+        $message .= "Dear ".$request->input('first_name')." ".$request->input('first_name')." <br/><br/>";
+        
+        $message .= "Please check your password of your ".env('APP_NAME', 'Thangam Exports')." account,<br/><br/>";
+        
+        $message .= "For your information,<br/>";
+        $message .= "<b>Email:</b> ".$request->input('email')."<br/>";
+        $message .= "<b>Password:</b> ".$request->input('password')."<br/><br/>";
+
+        $message .= "Sincerely,<br/>";
+        $message .= env('APP_NAME', 'Thangam Exports')." Team<br/>";
+        $message .= "https://thangamexports.com";
+
+        mail($to, $subject, $message, $headers);
 
         return redirect()->route('user.index')
                         ->with('success','User created successfully.');

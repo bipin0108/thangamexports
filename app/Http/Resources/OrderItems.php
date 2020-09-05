@@ -3,9 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use Storage;
 
-class Category extends JsonResource
+class OrderItems extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,12 +13,14 @@ class Category extends JsonResource
      * @return array
      */
     public function toArray($request)
-    {   
+    {
+        return [
+            'item_id' => $this->item_id,
+            'product' => $this->product,
+            'qty' => $this->qty,
+            'note' => $this->note,
+        ];
 
-        return [ 
-            'category_id' => $this->category_id,
-            'name' => $this->name, 
-            'image'=> Storage::disk('s3')->url($this->image),
-        ]; 
+        // return parent::toArray($request);
     }
 }

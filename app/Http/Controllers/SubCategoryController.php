@@ -5,29 +5,30 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DataTables;
 use App\Category;
+use App\SubCategory;
 use Storage; 
 
-class CategoryController extends Controller
+class SubCategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request, $id)
     {
         if($request->ajax()){
-            $data = Category::latest()->get();
+            $data = SubCategory::where('sub_categories.category_id', '=', $id)->get();
             return DataTables::of($data)
                     ->addIndexColumn() 
                     ->addColumn('action', function($data){
-                        $button = '<a href="'.route("category.edit", $data->category_id).'" class="btn btn-sm btn-primary" ><i class="fas fa-pencil-alt"></i></a>';
-                        $button .= '&nbsp;&nbsp;&nbsp;<button type="button" data-id="'.$data->category_id.'" class="btn btn-sm btn-danger delete" ><i class="fas fa-trash-alt"></i></button>';
-                        $button .= '&nbsp;&nbsp;&nbsp;<a href="'.route('sub_category.index', $data->category_id).'" data-id="'.$data->category_id.'" class="btn btn-sm btn-info" ><i class="fas fa-plus"></i> Sub Category</a>';
+                        $button = '<a href="'.route("sub_category.edit", ['cat_id'=>$data->category_id,'sub_cat_id'=>$data->sub_category_id]).'" class="btn btn-sm btn-primary" ><i class="fas fa-pencil-alt"></i></a>';
+                        $button .= '&nbsp;&nbsp;&nbsp;<button type="button" data-cat_id="'.$data->category_id.'" data-sub_cat_id="'.$data->sub_category_id.'" class="btn btn-sm btn-danger delete" ><i class="fas fa-trash-alt"></i></button>';
                         return $button;
                     })->rawColumns(['action', 'is_popular'])->make(true);
         }
-        return view('admin.category.index');
+        $category = Category::where('categories.category_id', '=', $id)->first();
+        return view('admin.sub_category.index', compact('category', 'id'));
     }
 
     /**
@@ -35,9 +36,9 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($id)
     {
-        return view('admin.sub_category.create');
+        return view('admin.sub_category.create', compact('id'));
     }
 
     /**
@@ -46,10 +47,10 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $id)
     {
         $this->validate($request, [
-            'name' => 'required|unique:categories,name',
+            'name' => 'required|string',
             'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
@@ -61,16 +62,17 @@ class CategoryController extends Controller
         $imagename = '';
         if(!empty($request->file('image'))){
             $file = $request->file('image');
-            $imagename = $file->store('category', 's3');
+            $imagename = $file->store('sub_category', 's3');
         }
 
-        $category = new Category;
+        $category = new SubCategory;
+        $category->category_id = $id;
         $category->name = $request->input('name');
         $category->image = $imagename;
         $category->save(); 
 
-        return redirect()->route('category.index')
-                        ->with('success','Category created successfully.');
+        return redirect()->route('sub_category.index', $id)
+                        ->with('success','Sub Category created successfully.');
     }
 
     /**
@@ -90,10 +92,10 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($cat_id, $sub_cat_id)
     {
-        $category = Category::where('category_id','=',$id)->first();   
-        return view('admin.category.edit', compact('category'));
+        $sub_category = SubCategory::where('sub_category_id','=',$sub_cat_id)->first();   
+        return view('admin.sub_category.edit', compact('sub_category', 'cat_id'));
     }
 
     /**
@@ -103,13 +105,13 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $cat_id, $sub_cat_id)
     {
         $this->validate($request, [
-            'name' => "required|unique:categories,name,$id,category_id", 
+            'name' => "required|string", 
         ]);
 
-        $res = Category::where('category_id',$id)->first();  
+        $res = SubCategory::where('sub_category_id',$sub_cat_id)->first();  
         $imagename = $res->image;
         if(!empty($request->file('image'))){
 
@@ -118,7 +120,7 @@ class CategoryController extends Controller
                 Storage::disk('s3')->delete($imagename);
             }
             $file = $request->file('image');
-            $imagename = $file->store('category', 's3');
+            $imagename = $file->store('sub_category', 's3');
 
             /*$file = $res->image;
             if(!empty($file)){
@@ -131,14 +133,14 @@ class CategoryController extends Controller
             $image->move($destinationPath, $imagename);*/
         }
         
-        $affectedRows = Category::where('category_id', $id)
+        $affectedRows = SubCategory::where('sub_category_id', $sub_cat_id)
                     ->update(array(
                         'name' => $request->input('name'),
                         'image' => $imagename,
                     ));
 
-        return redirect()->route('category.index')
-                            ->with('success','Category updated successfully.');
+        return redirect()->route('sub_category.index', $cat_id)
+                            ->with('success','Sub Category updated successfully.');
     }
 
     /**
@@ -147,10 +149,10 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($cat_id, $sub_cat_id)
     {
         
-        $category = Category::where('category_id', $id)->first();
+        $category = SubCategory::where('sub_category_id', $sub_cat_id)->first();
         $imagename = $category->image;
         if(!empty($imagename)){
             if(Storage::disk('s3')->exists($imagename)) {
@@ -159,8 +161,8 @@ class CategoryController extends Controller
             /*$filename = public_path().'/images/category/'.$file;
             \File::delete($filename);*/
         }
-        Category::where('category_id',$id)->delete();
-        return redirect()->route('category.index')
-                ->with('success','Category deleted successfully.');
+        SubCategory::where('sub_category_id',$sub_cat_id)->delete();
+        return redirect()->route('sub_category.index', $cat_id)
+                ->with('success','Sub Category deleted successfully.');
     }
 }

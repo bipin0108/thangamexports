@@ -18,7 +18,24 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
+ 
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'auth'
+], function ($router) {
+    Route::post('login', 'Api\ApiController@login');
+    Route::post('logout', 'Api\ApiController@logout');
+    Route::post('refresh', 'Api\ApiController@refresh');
+});
 
 Route::get('category-list', 'Api\ApiController@category_list');
 Route::get('product-list', 'Api\ApiController@product_list');
+Route::get('dashboard', 'Api\ApiController@dashboard');
+Route::get('sub-category-list/{id}', 'Api\ApiController@sub_category_list');
 
+Route::post('order', 'Api\ApiController@order');
+Route::get('order-list/{id}', 'Api\ApiController@order_list');
+
+Route::group(['middleware' => ['auth.jwt']], function() { 
+
+});

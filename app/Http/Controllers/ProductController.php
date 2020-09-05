@@ -21,11 +21,24 @@ class ProductController extends Controller
             $data = Product::latest()->get();
             return DataTables::of($data)
                     ->addIndexColumn() 
-                    ->addColumn('action', function($data){
+                    ->addColumn('is_popular', function($data){
+                        if($data->is_popular === 1){
+                            $toggle = '<div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input is_popular" data-product_id="'.$data->product_id.'" data-is_popular="0" id="customSwitch'.$data->product_id.'" checked>
+                                <label class="custom-control-label" for="customSwitch'.$data->product_id.'"></label>
+                            </div>';
+                        }else{
+                            $toggle = '<div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input is_popular" data-product_id="'.$data->product_id.'" data-is_popular="1"  id="customSwitch'.$data->product_id.'">
+                                <label class="custom-control-label" for="customSwitch'.$data->product_id.'"></label>
+                            </div>';
+                        }
+                        return $toggle;
+                    })->addColumn('action', function($data){
                         $button = '<a href="'.route("product.edit", $data->product_id).'" class="btn btn-sm btn-primary" ><i class="fas fa-pencil-alt"></i></a>';
                         $button .= '&nbsp;&nbsp;&nbsp;<button type="button" data-id="'.$data->product_id.'" class="btn btn-sm btn-danger delete" ><i class="fas fa-trash-alt"></i></button>';
                         return $button;
-                    })->rawColumns(['action'])->make(true);
+                    })->rawColumns(['action', 'is_popular'])->make(true);
         }
         return view('admin.product.index');
     }
@@ -53,7 +66,7 @@ class ProductController extends Controller
             'category_id' => 'required|numeric|not_in:0',
             'product_code' => 'required|unique:products,product_code', 
             'weight' => 'required|numeric|not_in:0',
-            'stone' => 'required|numeric|not_in:0', 
+            'stone' => 'required', 
             'kt' => 'required',
             'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
@@ -118,7 +131,7 @@ class ProductController extends Controller
             'category_id' => 'required|numeric|not_in:0',
             'product_code' => "required|unique:products,product_code,$id,product_id", 
             'weight' => 'required|string|numeric|not_in:0',
-            'stone' => 'required|string|numeric|not_in:0',
+            'stone' => 'required',
             'kt' => 'required',
         ]);
 
@@ -177,5 +190,17 @@ class ProductController extends Controller
         Product::where('product_id',$id)->delete();
         return redirect()->route('product.index')
                 ->with('success','Product deleted successfully.');
+    }
+
+
+    public function is_popular(Request $request)
+    {
+        $affectedRows = Product::where('product_id', $request->input('product_id'))
+            ->update(array(
+                'is_popular' => $request->input('is_popular'),
+            ));
+
+        return redirect()->route('product.index')
+                ->with('success','Product is popular successfully.');
     }
 }

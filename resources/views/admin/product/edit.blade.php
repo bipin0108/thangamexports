@@ -92,7 +92,7 @@
                       @endif 
                     </div>
                     <div class="form-group">
-                      <a data-magnify="gallery" href="{{ asset('images/product/'.$product->image) }}"> <img class="img-responsive" height="100" src="{{ asset('images/product/'.$product->image) }}"></a>
+                      <a data-magnify="gallery" href="{{ Storage::disk('s3')->url($product->image) }}"> <img class="img-responsive" height="100" src="{{ Storage::disk('s3')->url($product->image) }}"></a>
                     </div>
                     <div class="form-group">
                       <strong>Image:</strong>

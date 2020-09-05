@@ -9,12 +9,13 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Categories</h1>
+            <h1>Sub Categories ({{ $category->name }})</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{ url('/dashboard') }}">Home</a></li>
-              <li class="breadcrumb-item active">Categories</li>
+              <li class="breadcrumb-item"><a href="{{ route('category.index') }}">Categories</a></li>
+              <li class="breadcrumb-item active">Sub Categories ({{ $category->name }})</li>
             </ol>
           </div>
         </div>
@@ -28,9 +29,9 @@
         <div class="col-12">
           <div class="card">
             <div class="card-header">
-              <h3 class="card-title">Categories</h3>
+              <h3 class="card-title">Sub Categories ({{ $category->name }})</h3>
               <div class="text-right">
-                <a class="btn btn-primary" href="{{ route('category.create') }}"> <i class="fa fa-plus"></i> Create</a>
+                <a class="btn btn-primary" href="{{ route('sub_category.create', $id) }}"> <i class="fa fa-plus"></i> Create</a>
               </div>
             </div>
             <!-- /.card-header -->
@@ -90,9 +91,11 @@
 		$(document).ready(function(){
 
       $(document).on('click', '.delete', function(){
-        var id = $(this).data('id');
-        var url = '{{ route("category.destroy", ":id") }}';
-        url = url.replace(':id', id);
+        var cat_id = $(this).data('cat_id');
+        var sub_cat_id = $(this).data('sub_cat_id');
+        var url = '{{ route("sub_category.destroy", ["cat_id"=>":cat_id","sub_cat_id"=>":sub_cat_id"]) }}';
+        url = url.replace(':cat_id', cat_id);
+        url = url.replace(':sub_cat_id', sub_cat_id);
         $("#frmDel").attr('action',url);
         $("#modalDel").modal('show');
       });
@@ -101,7 +104,7 @@
      		processing: true,
      		serverSide: true,
      		ajax: {
-     			url: "{{ route('category.index') }}"
+     			url: "{{ route('sub_category.index', $id) }}"
        	},
        	columns: [
           { data: 'DT_RowIndex', name: 'DT_RowIndex' },
@@ -132,9 +135,8 @@
             initMaximized: true
           });
         }
-		  });
+	    });
 
-      
 		});
 	</script>
 @endsection
