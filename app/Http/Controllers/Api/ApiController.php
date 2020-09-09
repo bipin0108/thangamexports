@@ -100,12 +100,14 @@ class ApiController extends Controller{
 
     public function product_list(Request $request){ 
     	// Get the posts
-        $product = Product::where('sub_category_id',$request->query('sub_category_id')) 
-        			->whereRaw('FIND_IN_SET(?,kt)', $request->query('kt'))
-        			->paginate(10);
+        $product = Product::where('sub_category_id',$request->query('sub_category_id'));
+                if(!empty($_GET['kt'])){
+        			$product->whereRaw('FIND_IN_SET(?,kt)', $request->query('kt'));
+                }
+    			$result = $product->paginate(10);
         			 
         // Return collection of posts as a resource
-        return ProductResource::collection($product);
+        return ProductResource::collection($result);
     }
 
     public function dashboard(){
@@ -113,7 +115,7 @@ class ApiController extends Controller{
         $slider = Slider::all();
 
         // Get products
-        $category = Category::where('is_popular',1)->get();
+        $category = Category::all();
 
         // Get products
         $product = Product::where('is_popular',1)->get();

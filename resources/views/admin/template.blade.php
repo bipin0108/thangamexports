@@ -62,7 +62,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{ route('category.index') }}" class="nav-link {{ (request()->is('category*')) || (request()->is('sub-category*')) ? 'active' : '' }}">
+                <a href="{{ route('category.index') }}" class="nav-link {{ (request()->is('category*')) ? 'active' : '' }}">
                   <i class="nav-icon fas fa-paper-plane"></i>
                   <p>Categories</p>
                 </a>

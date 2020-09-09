@@ -24,7 +24,6 @@ class Product extends JsonResource
             'stone' => $this->stone,
             'kt' => $this->kt,
             'image'=> Storage::disk('s3')->url($this->image),
-            'category_name' => $this->category->name,
         ];
 
         // return parent::toArray($request);

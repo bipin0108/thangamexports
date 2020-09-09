@@ -41,19 +41,30 @@
                 <div class="col-6">
                   <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="form-group">
-                        <strong>Category:</strong>
-                        <select name="category_id" id="category_id" class="form-control @error('category_id') is-invalid @enderror">
-                          <option value="">Select Category</option>
-                          @foreach($category as $value)
-                          <option {{ ($product->category_id == $value->category_id) ? 'selected' : '' }} value="{{ $value->category_id }}">{{ $value->name }}</option>
-                          @endforeach
-                        </select> 
-                        @error('category_id')
-                          <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                          </span>
-                        @enderror
-                      </div>
+                      <strong>Category:</strong>
+                      <select name="category_id" id="category_id" class="form-control @error('category_id') is-invalid @enderror">
+                        <option value="">Select Category</option>
+                        @foreach($category as $value)
+                        <option {{ ($product->category_id == $value->category_id) ? 'selected' : '' }} value="{{ $value->category_id }}">{{ $value->name }}</option>
+                        @endforeach
+                      </select> 
+                      @error('category_id')
+                        <span class="invalid-feedback" role="alert">
+                          <strong>{{ $message }}</strong>
+                        </span>
+                      @enderror
+                    </div>
+                    <div class="form-group">
+                      <strong>Sub Category:</strong>
+                      <select name="sub_category_id" id="sub_category_id" class="form-control @error('sub_category_id') is-invalid @enderror">
+                        <option value="">Select Sub Category</option>
+                      </select> 
+                      @error('sub_category_id')
+                        <span class="invalid-feedback" role="alert">
+                          <strong>{{ $message }}</strong>
+                        </span>
+                      @enderror
+                    </div>
                     <div class="form-group">
                       <strong>Product Code:</strong>
                       <input id="product_code" type="text" class="form-control @error('product_code') is-invalid @enderror" name="product_code" autocomplete="product_code" placeholder="Product Code" value="{{ $product->product_code }}">
@@ -81,7 +92,7 @@
                         </span>
                       @enderror
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" id="KT">
                       <strong>KT:</strong><br>
                       <label><input @if( in_array( "18", explode(",", $product->kt)) ) checked @endif type="checkbox" name="kt[]"  class="@error('kt') is-invalid @enderror" value="18"></label> 18 
                       <br>
@@ -118,5 +129,34 @@
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
- 
+  <script type="text/javascript">
+    $(document).ready(function() {
+      setTimeout(function(){
+        $("#category_id").trigger('change');
+      },500);
+
+      $('#category_id').change(function(){ 
+        var category_id=$(this).val(); 
+        if(category_id == 2){
+          $("#KT").hide();
+        }else{
+          $("#KT").show();
+        }
+        var url = '{{ route("sub.category", ":id") }}';
+        url = url.replace(':id', category_id);
+        $.ajax({
+          url: url,
+          success: function(result){
+            if(result){
+              $('#sub_category_id').html(result); 
+              $('#sub_category_id option[value="{{ $product->sub_category_id }}"]').attr("selected","selected");
+            }else{
+
+            }         
+          } 
+        });
+      });
+
+    });
+  </script>
 @endsection

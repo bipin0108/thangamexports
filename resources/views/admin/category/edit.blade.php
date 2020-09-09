@@ -42,7 +42,7 @@
                   <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="form-group">
                       <strong>Name:</strong>
-                      <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" autocomplete="name" placeholder="Name" value="{{ $category->name }}">
+                      <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" autocomplete="name" placeholder="Name" value="{{ $category->name }}" {{ ($category->category_id == 2) ? 'readonly' : '' }}>
                       @error('name')
                         <span class="invalid-feedback" role="alert">
                           <strong>{{ $message }}</strong>

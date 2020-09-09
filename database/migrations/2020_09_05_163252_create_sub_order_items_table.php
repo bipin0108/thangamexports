@@ -18,7 +18,7 @@ class CreateSubOrderItemsTable extends Migration
             $table->foreignId('order_id')->unsigned()->index()->default('0'); 
             $table->foreignId('product_id')->unsigned()->index()->default('0'); 
             $table->integer('qty')->default('0');
-            $table->longText('note')->default('');
+            $table->longText('note');
             $table->timestamps();
         });
     }

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use DataTables;
 use App\Product;
 use App\Category;
+use App\SubCategory;
 use Storage;
 
 class ProductController extends Controller
@@ -64,10 +65,10 @@ class ProductController extends Controller
     {
         $this->validate($request, [
             'category_id' => 'required|numeric|not_in:0',
+            'sub_category_id' => 'required|numeric|not_in:0',
             'product_code' => 'required|unique:products,product_code', 
             'weight' => 'required|numeric|not_in:0',
-            'stone' => 'required', 
-            'kt' => 'required',
+            'stone' => 'required',   
             'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
@@ -83,10 +84,11 @@ class ProductController extends Controller
 
         $product = new Product;
         $product->category_id = $request->input('category_id');
+        $product->sub_category_id = $request->input('sub_category_id');
         $product->product_code = $request->input('product_code'); 
         $product->weight = $request->input('weight');
         $product->stone = $request->input('stone');
-        $product->kt = implode(',', $request->input('kt'));
+        $product->kt = !empty($request->input('kt'))?implode(',', $request->input('kt')):'';
         $product->image = $imagename;
         $product->save(); 
 
@@ -129,10 +131,10 @@ class ProductController extends Controller
     {
         $this->validate($request, [
             'category_id' => 'required|numeric|not_in:0',
+            'sub_category_id' => 'required|numeric|not_in:0',
             'product_code' => "required|unique:products,product_code,$id,product_id", 
             'weight' => 'required|string|numeric|not_in:0',
-            'stone' => 'required',
-            'kt' => 'required',
+            'stone' => 'required', 
         ]);
 
         $res = Product::where('product_id',$id)->first();  
@@ -157,14 +159,15 @@ class ProductController extends Controller
         }
         
         $affectedRows = Product::where('product_id', $id)
-                    ->update(array(
-                        'category_id' => $request->input('category_id'),
-                        'product_code' => $request->input('product_code'), 
-                        'weight' => $request->input('weight'),
-                        'stone' => $request->input('stone'),
-                        'kt' => implode(',', $request->input('kt')),
-                        'image' => $imagename,
-                    ));
+            ->update(array(
+                'category_id' => $request->input('category_id'),
+                'sub_category_id' => $request->input('sub_category_id'),
+                'product_code' => $request->input('product_code'), 
+                'weight' => $request->input('weight'),
+                'stone' => $request->input('stone'),
+                'kt' => (!empty($request->input('kt'))?implode(',', $request->input('kt')):''),
+                'image' => $imagename,
+            ));
 
         return redirect()->route('product.index')
                             ->with('success','Product updated successfully.');
@@ -202,5 +205,16 @@ class ProductController extends Controller
 
         return redirect()->route('product.index')
                 ->with('success','Product is popular successfully.');
+    }
+
+
+    public function sub_category($id)
+    {
+        $categories = SubCategory::where('category_id', $id)->get();           
+        $return="<option value=''>Select Sub Category</option>";
+        foreach($categories as $category){
+            $return.="<option value=".$category->sub_category_id.">".$category->name."</option>";
+        }                                
+        echo   $return;       
     }
 }

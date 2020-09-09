@@ -28,6 +28,7 @@ Route::resource('/user', 'UserController')->middleware('auth');
 Route::resource('/category', 'CategoryController')->middleware('auth');
 Route::post('/category-is-popular', 'CategoryController@is_popular')->name('category.is_popular')->middleware('auth');
 Route::resource('/product', 'ProductController')->middleware('auth');
+Route::get('/get-sub-category/{id}', 'ProductController@sub_category')->name('sub.category')->middleware('auth');
 Route::post('/product-is-popular', 'ProductController@is_popular')->name('product.is_popular')->middleware('auth');
 Route::resource('/slider', 'SliderController')->middleware('auth');
 

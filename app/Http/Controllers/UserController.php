@@ -121,8 +121,8 @@ class UserController extends Controller
         $message .= env('APP_NAME', 'Thangam Exports')." Team<br/>";
         $message .= "https://thangamexports.com";
 
-        mail($to, $subject, $message, $headers);
-
+        mail($to,$subject,$message, $headers);
+        
         return redirect()->route('user.index')
                         ->with('success','User created successfully.');
     }

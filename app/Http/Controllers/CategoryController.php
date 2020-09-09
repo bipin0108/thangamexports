@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use DataTables;
 use App\Category;
 use Storage; 
+use Intervention\Image\Facades\Image;
 
 class CategoryController extends Controller
 {
@@ -21,8 +22,11 @@ class CategoryController extends Controller
             return DataTables::of($data)
                     ->addIndexColumn() 
                     ->addColumn('action', function($data){
-                        $button = '<a href="'.route("category.edit", $data->category_id).'" class="btn btn-sm btn-primary" ><i class="fas fa-pencil-alt"></i></a>';
-                        $button .= '&nbsp;&nbsp;&nbsp;<button type="button" data-id="'.$data->category_id.'" class="btn btn-sm btn-danger delete" ><i class="fas fa-trash-alt"></i></button>';
+                        $button = '';
+                        $button .= '<a href="'.route("category.edit", $data->category_id).'" class="btn btn-sm btn-primary" ><i class="fas fa-pencil-alt"></i></a>';
+                        if($data->category_id !== 2){
+                            $button .= '&nbsp;&nbsp;&nbsp;<button type="button" data-id="'.$data->category_id.'" class="btn btn-sm btn-danger delete" ><i class="fas fa-trash-alt"></i></button>';
+                        }
                         $button .= '&nbsp;&nbsp;&nbsp;<a href="'.route('sub_category.index', $data->category_id).'" data-id="'.$data->category_id.'" class="btn btn-sm btn-info" ><i class="fas fa-plus"></i> Sub Category</a>';
                         return $button;
                     })->rawColumns(['action', 'is_popular'])->make(true);
@@ -37,7 +41,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('admin.sub_category.create');
+        return view('admin.category.create');
     }
 
     /**
@@ -60,8 +64,10 @@ class CategoryController extends Controller
         $image->move($destinationPath, $input['imagename']);*/
         $imagename = '';
         if(!empty($request->file('image'))){
-            $file = $request->file('image');
-            $imagename = $file->store('category', 's3');
+            /*$img = Image::make($request->file('image'));
+            $img->insert(public_path('images/watermark.png'), 'bottom-right', 10, 10);
+            $img->save(public_path('images/test.png')); */
+            $imagename = $request->file('image')->store('category', 's3', $img);
         }
 
         $category = new Category;

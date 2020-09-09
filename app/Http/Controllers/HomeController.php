@@ -35,10 +35,12 @@ class HomeController extends Controller
     public function profile_change(Request $request){
          
         $this->validate(request(), [
-            'name' => ['required', 'string', 'max:255'],
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
         ]);
         $user = User::find(auth()->user()->id);
-        $user->name = request('name');
+        $user->first_name = request('first_name');
+        $user->last_name = request('last_name');
         $user->save();
         return back()->with('success','Profile has been changed successfully!');
          

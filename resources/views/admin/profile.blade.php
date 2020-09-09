@@ -45,9 +45,18 @@
                       <form action="{{ url('/profile-change') }}" method="post">
                         @csrf
                         <div class="form-group">
-                          <label for="name">Name</label>
-                          <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ $user->name }}" autocomplete="name" autofocus placeholder="Name">
-                          @error('name')
+                          <label for="name">First Name</label>
+                          <input id="name" type="text" class="form-control @error('first_name') is-invalid @enderror" name="first_name" value="{{ $user->first_name }}" autocomplete="first_name" autofocus placeholder="First Name">
+                          @error('first_name')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                          @enderror
+                        </div>
+                        <div class="form-group">
+                          <label for="name">Last Name</label>
+                          <input id="name" type="text" class="form-control @error('last_name') is-invalid @enderror" name="last_name" value="{{ $user->last_name }}" autocomplete="last_name" autofocus placeholder="Last Name">
+                          @error('last_name')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>

@@ -17,8 +17,7 @@ class SubCategory extends JsonResource
     {
         return [ 
             'sub_category_id' => $this->sub_category_id,
-            'category_id' => $this->category_id,
-            'category_name' => $this->category->name,
+            'category_id' => $this->category_id, 
             'name' => $this->name, 
             'image'=> Storage::disk('s3')->url($this->image),
         ]; 

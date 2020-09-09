@@ -177,6 +177,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
         Yajra\DataTables\ButtonsServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class
 
     ],
 
@@ -232,6 +233,7 @@ return [
         'DataTables' => Yajra\DataTables\Facades\DataTables::class, 
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class, 
         'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
+        'Image' => Intervention\Image\Facades\Image::class
 
     ],
 

@@ -45,10 +45,25 @@
                         <select name="category_id" id="category_id" class="form-control @error('category_id') is-invalid @enderror">
                           <option value="">Select Category</option>
                           @foreach($category as $value)
-                          <option value="{{ $value->category_id }}">{{ $value->name }}</option>
+                            @if (old('category_id') == $value->category_id)
+                               <option value="{{ $value->category_id }}" selected>{{ $value->name }}</option>
+                            @else
+                             <option value="{{ $value->category_id }}">{{ $value->name }}</option>
+                            @endif
                           @endforeach
                         </select> 
                         @error('category_id')
+                          <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                          </span>
+                        @enderror
+                      </div>
+                      <div class="form-group">
+                        <strong>Sub Category:</strong>
+                        <select name="sub_category_id" id="sub_category_id" class="form-control @error('sub_category_id') is-invalid @enderror">
+                          <option value="">Select Sub Category</option>
+                        </select> 
+                        @error('sub_category_id')
                           <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
                           </span>
@@ -81,15 +96,11 @@
                           </span>
                         @enderror
                       </div>
-                      <div class="form-group">
+                      <div class="form-group" id="KT">
                         <strong>KT:</strong><br>
                         <label><input type="checkbox" name="kt[]"  class="@error('kt') is-invalid @enderror" value="18"></label> 18 
                         <br>
                         <label><input type="checkbox" name="kt[]" class="@error('kt') is-invalid @enderror" value="22"></label> 22
-                        <br>
-                        @if ($errors->has('kt'))
-                          <span class="text-danger"> <strong>{{ $errors->first('kt') }}</strong></span>
-                        @endif 
                       </div>
                       <div class="form-group">
                         <strong>Image:</strong>
@@ -120,6 +131,43 @@
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
- 
+  
+  <script type="text/javascript">
+    $(document).ready(function() {
+
+      var category_id = $("#category_id").val();
+      if(category_id == 2){
+        $("#KT").hide();
+      }else{
+        $("#KT").show();
+      }
+      
+      $('#category_id').trigger('change');
+      $('#category_id').change(function(){ 
+        var category_id=$(this).val(); 
+
+        if(category_id == 2){
+          $("#KT").hide();
+        }else{
+          $("#KT").show();
+        }
+
+        var url = '{{ route("sub.category", ":id") }}';
+        url = url.replace(':id', category_id);
+        $.ajax({
+          url: url,
+          success: function(result){
+            if(result){
+              $('#sub_category_id').html(result);
+            }else{
+
+            }         
+          } 
+        });
+      });
+
+    });
+  </script>
+
 @endsection
 
