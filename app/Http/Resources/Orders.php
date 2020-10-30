@@ -17,9 +17,10 @@ class Orders extends JsonResource
     public function toArray($request)
     {
         return [
-            'order_id' => $this->order_id,
-            'user' => $this->user,
-            'products' => OrderItemsResource::collection(OrderItems::where('order_id', $this->order_id)->get())
+            'order_id' => $this->order_id,  
+            'order_no' => $this->order_no,  
+            'status' => $this->status,  
+            'order_date' => $this->created_at,  
         ];
 
         // return parent::toArray($request);

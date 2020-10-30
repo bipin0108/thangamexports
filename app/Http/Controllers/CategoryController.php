@@ -67,7 +67,7 @@ class CategoryController extends Controller
             /*$img = Image::make($request->file('image'));
             $img->insert(public_path('images/watermark.png'), 'bottom-right', 10, 10);
             $img->save(public_path('images/test.png')); */
-            $imagename = $request->file('image')->store('category', 's3', $img);
+            $imagename = $request->file('image')->store('category', 's3');
         }
 
         $category = new Category;

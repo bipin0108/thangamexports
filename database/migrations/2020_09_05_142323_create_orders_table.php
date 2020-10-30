@@ -16,10 +16,11 @@ class CreateOrdersTable extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->bigIncrements('order_id'); 
             $table->bigInteger('user_id')->unsigned()->index();
+            $table->enum('status', array('Pending','Confirmed','Cancelled'))->default('Pending')->change();
             $table->timestamps();
 
             // Foreign Key
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

@@ -86,6 +86,12 @@
                 </a>
               </li>
               <li class="nav-item">
+                <a href="{{ url('/order') }}" class="nav-link {{ (request()->is('order*')) ? 'active' : '' }}">
+                  <i class="nav-icon fab fa-first-order"></i>
+                  <p>Orders</p>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a href="{{ url('/logout') }}" class="nav-link">
                   <i class="nav-icon fas fa-sign-out-alt"></i>
                   <p>Logout</p>

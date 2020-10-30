@@ -20,6 +20,7 @@ use App\User;
 use App\Slider;
 use App\Orders;
 use App\OrderItems;
+use PDF;
 
 class ApiController extends Controller{
 
@@ -161,7 +162,14 @@ class ApiController extends Controller{
 
         $order = new Orders();
         $order->user_id = $user_id;
-        $order_id = $order->save();
+        $latestOrder = Orders::orderBy('created_at','DESC')->first();
+        if(!empty($latestOrder)){
+            $order->order_no = 'OTE/20-21/'.str_pad($latestOrder->order_id + 1, 5, "0", STR_PAD_LEFT);
+        }else{
+            $order->order_no = 'OTE/20-21/'.str_pad(1, 5, "0", STR_PAD_LEFT);
+        }
+        $order->save();
+        $order_id = $order->order_id;
 
         foreach ($products as $idx => $product){
             $orderItem = new OrderItems();
@@ -176,6 +184,24 @@ class ApiController extends Controller{
             'status'=>true,
             'message'=>'Order successfully.' 
         ],200);
+    }
+
+    public function order_pdf($id){
+        
+        $data = array();
+        $order = Orders::select('orders.order_id', 'orders.order_no', \DB::raw("SUM(order_items.qty) AS qty"), \DB::raw("SUM(order_items.qty*products.weight) AS weight"))
+                        ->where('orders.order_id', $id)
+                        ->join('order_items', 'orders.order_id', '=', 'order_items.order_id')
+                        ->join('products', 'order_items.product_id', '=', 'products.product_id')->first(); 
+        $data['order'] = $order;
+        $order_items = OrderItems::select('order_items.qty','order_items.note','products.product_code','products.weight','products.stone','products.image')
+            ->where('order_items.order_id', $id)
+            ->join('products', 'order_items.product_id', '=', 'products.product_id')->get(); 
+        $data['order_items'] = $order_items; 
+        // return view('admin.order.pdf', compact('order', 'order_items'));
+        $pdf = \App::make('dompdf.wrapper');        
+        $pdf->loadView('admin.order.pdf', compact('order', 'order_items'));
+        return $pdf->stream('sample.pdf');
     }
 
 }

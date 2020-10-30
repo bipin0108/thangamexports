@@ -10,7 +10,7 @@ class Orders extends Model
 
     protected $primaryKey = 'order_id';
 
-    protected $fillable = ['user_id'];
+    protected $fillable = ['user_id', 'status'];
 
     public function user() {
     	return $this->belongsTo(User::class,'user_id');

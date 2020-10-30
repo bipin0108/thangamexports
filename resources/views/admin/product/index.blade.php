@@ -129,7 +129,17 @@
               { data: 'kt', name: 'kt' }, 
               { data: 'is_popular', name: 'is_popular' }, 
 	       			{ data: 'action', name: 'action', oderable: false }
-		       	]
+		       	],
+            "drawCallback": function( settings ) {
+              $('[data-toggle="tooltip"]').tooltip();
+              $('[data-magnify]').magnify({
+                resizable: false,
+                headToolbar: [
+                  'close'
+                ],
+                initMaximized: true
+              });
+            }
 		    });
 
       $(document).on('click', '.is_popular', function(){

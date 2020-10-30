@@ -40,3 +40,9 @@ Route::post('/sub-category-store/{id}', 'SubCategoryController@store')->name('su
 Route::get('/sub-category-edit/{cat_id}/{sub_cat_id}', 'SubCategoryController@edit')->name('sub_category.edit')->middleware('auth'); 
 Route::patch('/sub-category-update/{cat_id}/{sub_cat_id}', 'SubCategoryController@update')->name('sub_category.update')->middleware('auth'); 
 Route::delete('/sub-category-destroy/{cat_id}/{sub_cat_id}', 'SubCategoryController@destroy')->name('sub_category.destroy')->middleware('auth'); 
+
+// Orders
+Route::get('/order', 'OrderController@index')->name('order.index')->middleware('auth');
+Route::get('/order-detail/{id}', 'OrderController@order_details')->name('order.detail')->middleware('auth');
+Route::post('/order-status-change',  'OrderController@status_change')->name('order.status_change')->middleware('auth');
+Route::get('/order-pdf/{id}',  'OrderController@order_pdf')->name('order.pdf')->middleware('auth');

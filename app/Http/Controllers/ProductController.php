@@ -203,8 +203,10 @@ class ProductController extends Controller
                 'is_popular' => $request->input('is_popular'),
             ));
 
-        return redirect()->route('product.index')
-                ->with('success','Product is popular successfully.');
+        return response()->json([
+            'status'=>true,
+            'message'=>'Product is popular successfully.' 
+        ],200);
     }
 
 

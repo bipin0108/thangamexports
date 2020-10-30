@@ -127,17 +127,17 @@
 					{ data: 'email', name: 'stone' }, 
 					{ data: 'mobile', name: 'mobile' }, 
 	       			{ data: 'action', name: 'action', oderable: false }
-		       	],
-				"drawCallback": function( settings ) {
-					$('[data-toggle="tooltip"]').tooltip();
-					$('[data-magnify]').magnify({
-						resizable: false,
-						headToolbar: [
-							'close'
-						],
-						initMaximized: true
-					});
-				}
+	       	],
+  				"drawCallback": function( settings ) {
+  					$('[data-toggle="tooltip"]').tooltip();
+  					$('[data-magnify]').magnify({
+  						resizable: false,
+  						headToolbar: [
+  							'close'
+  						],
+  						initMaximized: true
+  					});
+  				}
 		    });
 		});
 	</script>

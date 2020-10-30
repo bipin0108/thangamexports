@@ -162,9 +162,8 @@ class UserController extends Controller
         $this->validate($request, [
             'first_name' => 'required|string',
             'last_name' => 'required|string',
-            'email' => 'required|unique:users,$id,email',  
-            'mobile' => 'required|numeric',
-            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'email' => 'required|unique:users,email,'.$id,  
+            'mobile' => 'required|numeric', 
         ]);
 
         $user = User::where('id',$id)->first();  
@@ -188,13 +187,13 @@ class UserController extends Controller
             $image->move($destinationPath, $imagename);*/
         }
         
-        $affectedRows = Product::where('product_id', $id)
+        $affectedRows = User::where('id', $id)
                     ->update(array(
                         'first_name' => $request->input('first_name'),
                         'last_name' => $request->input('last_name'), 
                         'email' => $request->input('email'),
                         'mobile' => $request->input('mobile'), 
-                        'profile_image' => $imagename, 
+                        'profile_image' => !empty($imagename)?$imagename:'', 
                     ));
 
         return redirect()->route('user.index')

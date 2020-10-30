@@ -35,6 +35,7 @@ Route::get('sub-category-list/{id}', 'Api\ApiController@sub_category_list');
 
 Route::post('order', 'Api\ApiController@order');
 Route::get('order-list/{id}', 'Api\ApiController@order_list');
+Route::get('order-pdf/{id}', 'Api\ApiController@order_pdf');
 
 Route::group(['middleware' => ['auth.jwt']], function() { 
 
